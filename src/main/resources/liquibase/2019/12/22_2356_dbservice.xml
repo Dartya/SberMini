@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2019-12-22_2356" author="Aleksandr Pitasov" logicalFilePath="2019-12-22_2356_dbservice.xml">
+
+
+        <insert tableName="currencies">
+            <column name="id" value="1"/>
+            <column name="currency_code" value="RUB"/>
+            <column name="currency" value="Росссийский рубль"/>
+        </insert>
+
+        <insert tableName="dict_operations">
+            <column name="id" value="1"/>
+            <column name="operation" value="Создание счета"/>
+        </insert>
+        <insert tableName="dict_operations">
+            <column name="id" value="2"/>
+            <column name="operation" value="Пополнение счета"/>
+        </insert>
+        <insert tableName="dict_operations">
+            <column name="id" value="3"/>
+            <column name="operation" value="Вывод средств"/>
+        </insert>
+        <insert tableName="dict_operations">
+            <column name="id" value="4"/>
+            <column name="operation" value="Перевод адресату"/>
+        </insert>
+        <insert tableName="dict_operations">
+            <column name="id" value="5"/>
+            <column name="operation" value="Переводу от"/>
+        </insert>
+
+    </changeSet>
+</databaseChangeLog>

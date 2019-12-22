@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet id="2019-12-22_1911" author="Aleksandr Pitasov" logicalFilePath="2019-12-22_1911_dbservice.xml">
+
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="generals"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="clients">
+            <column name="id" type="INT(11)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="clients_pkey"/>
+            </column>
+            <column name="login" type="VARCHAR(16)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="pass" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="surname" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="second_name" type="VARCHAR(255)"/>
+        </createTable>
+
+        <addAutoIncrement columnDataType="int(11)"
+                          columnName="id"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="clients"/>
+
+        <createTable tableName="accounts">
+            <column name="id" type="INT(11)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="accounts_pkey"/>
+            </column>
+            <column name="client_id" type="INT(11)">
+                <constraints nullable="false" />
+            </column>
+            <column name="currency_id" type="INT(11)">
+                <constraints nullable="false" />
+            </column>
+            <column name="deposit" type="DECIMAL(10,0)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addAutoIncrement columnDataType="int(11)"
+                          columnName="id"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="accounts"/>
+
+        <createTable tableName="currencies">
+            <column name="id" type="INT(11)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="currencies_pkey"/>
+            </column>
+            <column name="currency_code" type="VARCHAR(3)">
+                <constraints nullable="false" />
+            </column>
+            <column name="currency" type="VARCHAR(45)">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addAutoIncrement columnDataType="int(11)"
+                          columnName="id"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="currencies"/>
+
+        <addForeignKeyConstraint constraintName="fk_accounts_currencies_id"
+
+                                 baseColumnNames="currency_id"
+                                 baseTableName="accounts"
+
+                                 referencedColumnNames="id"
+                                 referencedTableName="currencies"
+
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+        />
+
+        <addForeignKeyConstraint constraintName="fk_accounts_client_id"
+
+                                 baseColumnNames="client_id"
+                                 baseTableName="accounts"
+
+                                 referencedColumnNames="id"
+                                 referencedTableName="clients"
+
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+        />
+
+        <createTable tableName="operations">
+            <column name="id" type="INT(11)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="operations_pkey"/>
+            </column>
+            <column name="accounts_id" type="INT(11)">
+                <constraints nullable="false" />
+            </column>
+            <column name="secon_account_id" type="INT(11)"/>
+            <column name="summ" type="DECIMAL(10,0)">
+                <constraints nullable="false" />
+            </column>
+            <column name="dict_operation_id" type="INT(11)">
+                <constraints nullable="false" />
+            </column>
+            <column name="timestamp" type="TIMESTAMP">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <addAutoIncrement columnDataType="int(11)"
+                          columnName="id"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="operations"/>
+
+        <createTable tableName="dict_operations">
+            <column name="id" type="INT(11)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="dict_operations_pkey"/>
+            </column>
+            <column name="operation" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addAutoIncrement columnDataType="int(11)"
+                          columnName="id"
+                          incrementBy="1"
+                          schemaName="public"
+                          startWith="1"
+                          tableName="dict_operations"/>
+
+        <addForeignKeyConstraint constraintName="fk_operations_accounts_accounts_id"
+
+                                 baseColumnNames="accounts_id"
+                                 baseTableName="operations"
+
+                                 referencedColumnNames="id"
+                                 referencedTableName="accounts"
+
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+        />
+
+        <addForeignKeyConstraint constraintName="fk_operations_accounts_secon_account_id"
+
+                                 baseColumnNames="secon_account_id"
+                                 baseTableName="operations"
+
+                                 referencedColumnNames="id"
+                                 referencedTableName="accounts"
+
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+        />
+
+        <addForeignKeyConstraint constraintName="fk_operations_dict_operations_id"
+
+                                 baseColumnNames="dict_operation_id"
+                                 baseTableName="operations"
+
+                                 referencedColumnNames="id"
+                                 referencedTableName="dict_operations"
+
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+        />
+
+        <createTable tableName="logs">
+            <column name="clients_id" type="INT(11)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="logs_clients_id_pkey"/>
+            </column>
+            <column name="operation_id" type="INT(11)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="logs_operation_id_pkey"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint constraintName="fk_logs_clients_id"
+
+                                 baseColumnNames="clients_id"
+                                 baseTableName="logs"
+
+                                 referencedColumnNames="id"
+                                 referencedTableName="clients"
+
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+        />
+
+        <addForeignKeyConstraint constraintName="fk_logs_operations_id"
+
+                                 baseColumnNames="operation_id"
+                                 baseTableName="logs"
+
+                                 referencedColumnNames="id"
+                                 referencedTableName="operations"
+
+                                 deferrable="true"
+                                 initiallyDeferred="true"
+                                 onDelete="RESTRICT"
+                                 onUpdate="RESTRICT"
+        />
+    </changeSet>
+</databaseChangeLog>

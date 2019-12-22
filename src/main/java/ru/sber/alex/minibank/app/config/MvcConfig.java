@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.mysql.cj.jdbc.MysqlDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +33,8 @@ public class MvcConfig implements WebMvcConfigurer {
     private String dbUsername;
     @Value("${db.password}")
     private String dbPassword;
+    @Value("${db.driver}")
+    private String dbDriver;
 
     private final ObjectMapper objectMapper;
 
@@ -66,7 +67,8 @@ public class MvcConfig implements WebMvcConfigurer {
         final Map<String, String> env = System.getenv();
         return DataSourceBuilder
                 .create()
-                .type(MysqlDataSource.class)
+                .driverClassName(dbDriver)
+                //.type(MysqlDataSource.class)
                 .url(dbUrl)
                 .username(dbUsername)
                 .password(dbPassword)
