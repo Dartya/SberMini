@@ -22,7 +22,7 @@ build_image:
     - build
   stage: image
   tags:
-    - shell
+    - docker
   before_script:
     - docker info
   script:
